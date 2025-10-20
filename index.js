@@ -41,3 +41,13 @@ app.get('/api/users', (req,res) =>{
         res.json(result);
     })
 })
+
+app.post('/api/users',(req,res) =>{
+    const{nama,nim,kelas,prodi} = req.body;
+
+    if (!nama || !nim || !kelas ){
+        return res.status(400).json({message: 'nama, nim, kelas'})
+
+    }
+        
+})
