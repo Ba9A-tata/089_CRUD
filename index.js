@@ -1,13 +1,12 @@
-const express = require('express')
+const express = require('express');
 let mysql = require('mysql2');
-const { use } = require('react');
 const app = express();
-const PORT = 3008;
+const PORT = 3000;
 app.use(express.json());
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }));
 
-app.get('/',(req, res) => {
-    res.send('Hello World')
+app.get('/', (req, res) => {
+    res.send('Hello World!');
 });
 
 app.listen(PORT, () => {
@@ -47,7 +46,34 @@ app.post('/api/users',(req,res) =>{
 
     if (!nama || !nim || !kelas ){
         return res.status(400).json({message: 'nama, nim, kelas'})
-
     }
-        
-})
+
+    db.query(
+        'INSERT INTO mahasiswa (nama,nim,kelas) VALUES (?,?,?)',
+        [nama,nim.kelas],
+        (err, results) => {
+            if(err) {
+                console.error(err);
+                return res.status(500).json({message:'Database Error'});
+            }
+            res.status(201).json({message: 'User created successfully'});
+        }
+    );     
+});
+
+app.put('/api/users/:id', (req,res) => {
+    const userId = req.params.id;
+    const {nama, nim, kelas} = req.body;
+    db.query(
+        'UPDATE mahasiswa  SET nama = ?, nim = ?, kelas = ?, WHERE id = ?',
+        [nama,, nim ,kelas, userId],
+        (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'Database Error' });
+            }
+            res.json({ message: 'User updates successfully!'});
+        }
+    );
+});
+
